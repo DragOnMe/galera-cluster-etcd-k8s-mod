@@ -1,4 +1,4 @@
-# Maraidb Galera Cluster in K8s Cluster using MariaDB 10.1 Docker Image (Galera) #
+# Mariadb Galera Cluster in K8s #
 
 
 ## Overview ##
