@@ -1,25 +1,20 @@
 # Mariadb Galera Cluster in K8s #
 
+### Technical details
 
-## Overview ##
+##### Prerequites
+- A working k8s cluster with glusterfs persistent storage
+- kubectl, etc.
 
-The image supports running MariaDB 10.1 (Galera is included) with Docker orchestration tool like Docker Engine Swarm Mode and Kubernetes and requires an etcd (standalone or cluster) to run homogeneously. It can also run on a standalone environment.
-
-## Requirement ##
-
-A healthy etcd cluster. Please refer to Severalnines' [blog post](http://severalnines.com/blog/mysql-docker-deploy-homogeneous-galera-cluster-etcd) on how to setup this.
-
-## Image Description ##
-
-To pull the image, simply:
-
+##### Creating mariadb cluster with etcd cluster
+- Before creating mariadb cluster, we need to create an ETCD data store
+  for storing galera cluster status
 ```bash
-$ docker pull severalnines/mariadb
+$ kubectl create -f 00-etcd-cluster.yaml
 ```
 
-The image consists of MariaDB 10.1 (Galera ready) and all of its components:
-* MariaDB client package.
-* Percona Xtrabackup.
-* jq - Lightweight and flexible command-line JSON processor.
-* report_status.sh - report Galera status to etcd every `TTL`.
-* healthcheck.sh
+- After that, just run as following:
+```
+$ kubectl create -f 01-galera-mariadb-ss.yaml
+$ kubectl get pods -n ns-galera-cluster -w
+```
