@@ -4,12 +4,14 @@
 # Changed image
 #   From: severalnines/mariadb:10.1
 #   To: drlee001/mariadb:10.1
+
+# Headless service for galera statefulset
 ---
 apiVersion: v1
 kind: Service
 metadata:
   namespace: ns-galera-etcd
-  name: galera-ss
+  name: galera-hs
   labels:
     app: galera-ss
 spec:
@@ -28,7 +30,7 @@ metadata:
   namespace: ns-galera-etcd
   name: galera-ss
 spec:
-  serviceName: "galera-ss"
+  serviceName: "galera-hs"
   replicas: 3
   template:
     metadata:
@@ -83,9 +85,6 @@ spec:
         volume.beta.kubernetes.io/storage-class: glusterfs-storage
     spec:
       accessModes: [ "ReadWriteOnce" ]
-      # uncomment if using slow storageClass on AWS
-      # then no need for running pv or pvc manifests
-      #storageClassName: slow
       resources:
         requests:
           #storage: 1Gi
