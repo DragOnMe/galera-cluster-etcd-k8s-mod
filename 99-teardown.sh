@@ -18,5 +18,5 @@ sleep 20
 kubectl get pv
 
 # 5. check if gluster volume exists
-sleep 30
-heketi-cli volume list
+#sleep 30
+#heketi-cli volume list

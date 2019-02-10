@@ -4,6 +4,10 @@
 # Changed image
 #   From: severalnines/mariadb:10.1
 #   To: drlee001/mariadb:10.1
+# Changed storageclass
+#   From: glusterfs
+#   To: nfs(default)
+# Added mysql-read service
 
 # Headless service for galera statefulset
 ---
@@ -24,17 +28,37 @@ spec:
 
 ---
 
+# Client service for connecting to any MySQL instance for reads.
+# For writes, you must instead connect to the master: galera-ss-0.galera-hs.
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: ns-galera-etcd
+  name: galera-read
+  labels:
+    app: galera-ss
+spec:
+  ports:
+  - port: 3306
+    name: mysql
+  selector:
+    app: galera-ss
+
+---
+
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   namespace: ns-galera-etcd
   name: galera-ss
 spec:
+  selector:
+    matchLabels:
+      app: galera-ss
   serviceName: "galera-hs"
   replicas: 3
   template:
     metadata:
-      namespace: ns-galera-etcd
       labels:
         app: galera-ss
     spec:
@@ -74,6 +98,10 @@ spec:
             - --liveness
           initialDelaySeconds: 120
           periodSeconds: 1
+        resources:
+          requests:
+            cpu: 200m
+            memory: 200Mi
         volumeMounts:
         - name: mysql-datadir
           mountPath: /var/lib/mysql
@@ -81,8 +109,8 @@ spec:
   - metadata:
       namespace: ns-galera-etcd
       name: mysql-datadir
-      annotations:
-        volume.beta.kubernetes.io/storage-class: glusterfs-storage
+      #annotations:
+        #volume.beta.kubernetes.io/storage-class: glusterfs-storage
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:

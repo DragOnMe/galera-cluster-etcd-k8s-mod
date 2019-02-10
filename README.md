@@ -18,7 +18,6 @@ $ kubectl apply -f 00-etcd-cluster.yaml
 
 - After that, just run as following:
 ```
-$ kubectl create -f 01-galera-mariadb-ss.yaml
 $ kubectl get pods -n ns-galera-cluster -w
 ```
 
