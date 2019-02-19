@@ -3,9 +3,9 @@
 ### Technical details
 
 ##### Prerequites
-- A working k8s cluster with persistent storage(glusterfs)
+- A working k8s cluster with persistent storage(glusterfs, nfs, ...) with at least 1 default storage class
 - kubectl, etc.
-- Tested on k8s 1.9.x~1.11.3
+- Tested on k8s 1.9.x, 1.11.3, 1.13.3
 
 ----------
 
