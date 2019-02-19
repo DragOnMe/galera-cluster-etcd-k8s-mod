@@ -14,7 +14,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  # Must annotate for headless services in OpenShift, K8s statefulset
+  # Must annotate for headless services in OpenShift, K8s statefulset!
   annotations:
     service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
   namespace: ns-galera-etcd
