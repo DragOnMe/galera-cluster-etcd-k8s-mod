@@ -1,6 +1,8 @@
-# Mariadb Galera Cluster in K8s #
+# Mariadb Galera Cluster in K8s with ETCD#
 
 ### Technical details
+
+A working Mariadb Galera Cluster on K8s. All galera cluster's State Snapshot Transfers(SSTs) are implemented via etcd
 
 ##### Prerequites
 - A working k8s cluster with persistent storage(glusterfs, nfs, ...) with at least 1 default storage class
