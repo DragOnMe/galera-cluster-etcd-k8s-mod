@@ -2,7 +2,9 @@
 
 ### Technical details
 
-A working Mariadb Galera Cluster on K8s. All galera cluster's State Snapshot Transfers(SSTs) are implemented via etcd
+A working Mariadb Galera Cluster on K8s. All galera cluster's State Snapshot Transfers(SSTs), Incremental State Transfer(SST) are implemented via etcd.
+
+Based on https://github.com/severalnines/galera-docker-mariadb, modified and tested for Kubernetes cluster from v1.11.x to v1.13.3 
 
 ##### Prerequites
 - A working k8s cluster with persistent storage(glusterfs, nfs, ...) with at least 1 default storage class
