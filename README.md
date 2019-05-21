@@ -1,4 +1,4 @@
-# Mariadb Galera Cluster in K8s with ETCD#
+# Mariadb Galera Cluster in K8s with ETCD
 
 ### Technical details
 
@@ -9,31 +9,36 @@ Based on https://github.com/severalnines/galera-docker-mariadb, modified and tes
 ##### Prerequites
 - A working k8s cluster with persistent storage(glusterfs, nfs, ...) with at least 1 default storage class
 - kubectl, etc.
-- Tested on k8s 1.9.x, 1.11.3, 1.13.3
+- Tested on k8s 1.9.x, 1.11.3, 1.13.3, 1.14.1
 
 ----------
 
 ##### Creating mariadb cluster with etcd cluster
+- First, generate yaml and sh files from Template/. namespace should exist beforehand.
+```
+$ ./000-set-names ns-galera
+```
+
 - Before creating mariadb cluster, we need to create an ETCD data store
   for storing galera cluster status
 ```bash
 $ kubectl apply -f 00-etcd-cluster.yaml
 ```
 
-- After that, just run as following:
-```
-$ kubectl get pods -n ns-galera-cluster -w
-```
-
 - And then, check if etcd cluster is ok
 ```
-$ kubectl exec -it -n ns-galera-etcd etcd0 -- etcdctl cluster-health
+$ ./77-check-etcd-health.sh
 ```
 
-- Now create the galera cluster with statefulset
+- After that, just run as following:
+```
+$ kubectl get pods -n ns-galera -w
+```
+
+- Now create the galera cluster with statefulset and test by mysql client
 ```
 $ kubectl apply -f 01-galera-mariadb-ss.yaml
-$ kubectl get statefulset -n ns-galera-etcd galera-ss -w
+$ ./87-galera-check-mysql-client.sh
 ```
 
 ----------
