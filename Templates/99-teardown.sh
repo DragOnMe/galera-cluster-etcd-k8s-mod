@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export GALERA_NAMESPACE="ns-galera-etcd"
+export GALERA_NAMESPACE="__namespace__"
 
 # 1. delete galera statefulset
 kubectl delete -f 01-galera-mariadb-ss.yaml

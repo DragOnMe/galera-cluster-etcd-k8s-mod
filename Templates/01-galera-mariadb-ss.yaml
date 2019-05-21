@@ -14,7 +14,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: ns-galera-etcd
+  namespace: __namespace__
   name: galera-hs
   labels:
     app: galera-ss
@@ -33,7 +33,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: ns-galera-etcd
+  namespace: __namespace__
   name: galera-read
   labels:
     app: galera-ss
@@ -49,7 +49,7 @@ spec:
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
-  namespace: ns-galera-etcd
+  namespace: __namespace__
   name: galera-ss
 spec:
   selector:
@@ -107,7 +107,7 @@ spec:
           mountPath: /var/lib/mysql
   volumeClaimTemplates:
   - metadata:
-      namespace: ns-galera-etcd
+      namespace: __namespace__
       name: mysql-datadir
       #annotations:
         #volume.beta.kubernetes.io/storage-class: glusterfs-storage

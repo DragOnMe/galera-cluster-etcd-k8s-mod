@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+CLUSTER_NAME=$(kubectl config get-contexts --no-headers | grep '*' | awk '{print $3}')
+NAMESPACE_NAME="$1"
+
+TEMPLATE_PATH="./Templates"
+TEMPLATE_CLUSTER="__cluster__"
+TEMPLATE_NAMESPACE="__namespace__"
+
+function kubectlns() {
+  #ctx=`kubectl config current-context`
+
+  # verify that the namespace exists
+  ns=`kubectl get namespace ${1} --no-headers --output=go-template={{.metadata.name}} 2>/dev/null`
+  if [ -z "${ns}" ]; then
+    echo "Namespace (${1}) not found. Please create one or check if the name is correct."
+    exit -1
+  fi
+}
+
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 namespace-name"
+    exit -1
+fi
+
+# Check if namespace exists
+kubectlns $NAMESPACE_NAME
+
+read -n 1 -s -r -p "Press any key to deploy Mariadb cluster in cluster ($CLUSTER_NAME), namespace ($NAMESPACE_NAME) or ^C to abort: "
+
+echo "Setting cluster and namespace name in files ..."
+
+declare -a FILES=($(ls Templates/))
+
+echo "Processing (${#FILES[*]}) files."
+
+for f in "${FILES[@]}"; do
+    sed -e "s/$TEMPLATE_CLUSTER/$CLUSTER_NAME/g" "$TEMPLATE_PATH/$f" > $f
+    sed -i "s/$TEMPLATE_NAMESPACE/$NAMESPACE_NAME/g" $f
+    chmod +x $f
+    echo "Done with $f..."
+done
