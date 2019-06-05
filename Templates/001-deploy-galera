@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+echo "Deploying to __namespace__ in __cluster__"
+
+kubectl apply -f 00-etcd-cluster.yaml
+
+sleep 20
+
+if grep -Fq "storageClassName: \"manual\"" 01-galera-mariadb-ss.yaml; then
+    kubectl apply -f 02-pv.yaml
+fi
+
+sleep 10
+
+kubectl apply -f 01-galera-mariadb-ss.yaml
+
+kubectl get pods -n __namespace__ -w

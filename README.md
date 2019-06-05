@@ -16,16 +16,24 @@ Based on https://github.com/severalnines/galera-docker-mariadb, modified and tes
 ##### Creating mariadb cluster with etcd cluster
 - First, generate yaml and sh files from Template/. namespace should exist beforehand.
 ```
-$ ./000-set-names ns-galera default
+$ ./000-gen-cmd-recipe ns-galera default
 ```
 
 The option 'default' means using default storage class for the PV's. If you want to use hostPath PV, use 'local' instead and then, 02-pv.yaml file will be copied from Templates/ folder.
+
+And then, just run 000-gen-cmd-recipe!
+
+Or else, see below 1 to 3.
+
+###1.
 
 - Before creating mariadb cluster, we need to create an ETCD data store
   for storing galera cluster status
 ```bash
 $ kubectl apply -f 00-etcd-cluster.yaml
 ```
+
+###2.
 
 - And then, check if etcd cluster is ok
 ```
@@ -36,6 +44,8 @@ $ ./77-check-etcd-health.sh
 ```
 $ kubectl get pods -n ns-galera -w
 ```
+
+###3.
 
 - Now create the galera cluster with statefulset and test by mysql client
 ```
