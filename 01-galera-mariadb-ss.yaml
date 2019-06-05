@@ -1,0 +1,119 @@
+# Refer to https://github.com/severalnines/galera-docker-mariadb
+# Refer to https://severalnines.com/blog/mysql-docker-deploy-homogeneous-galera-cluster-etcd
+# Refer to https://hub.docker.com/r/severalnines/mariadb/
+# Changed image
+#   From: severalnines/mariadb:10.1
+#   To: drlee001/mariadb:10.1
+# Changed storageclass
+#   From: glusterfs
+#   To: nfs(default)
+# Added mysql-read service
+
+# Headless service for galera statefulset
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: ns-galera
+  name: galera-hs
+  labels:
+    app: galera-ss
+spec:
+  ports:
+  - port: 3306
+    name: mysql
+  clusterIP: None
+  selector:
+    app: galera-ss
+
+---
+
+# Client service for connecting to any MySQL instance for reads.
+# For writes, you must instead connect to the master: galera-ss-0.galera-hs.
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: ns-galera
+  name: galera-read
+  labels:
+    app: galera-ss
+spec:
+  ports:
+  - port: 3306
+    name: mysql
+  selector:
+    app: galera-ss
+
+---
+
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  namespace: ns-galera
+  name: galera-ss
+spec:
+  selector:
+    matchLabels:
+      app: galera-ss
+  serviceName: "galera-hs"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: galera-ss
+    spec:
+      containers:
+      - name: galera
+        image: drlee001/mariadb:10.1-modcnf
+        ports:
+        - name: mysql
+          containerPort: 3306
+        env:
+        # kubectl create secret generic mysql-pass --from-file=password.txt
+        - name: MYSQL_ROOT_PASSWORD
+          value: mysql
+        - name: DISCOVERY_SERVICE
+          value: etcd-client:2379
+        - name: XTRABACKUP_PASSWORD
+          value: password
+        - name: CLUSTER_NAME
+          value: mariadb_galera_ss
+        - name: MYSQL_DATABASE
+          value: mydatabase
+        - name: MYSQL_USER
+          value: myuser
+        - name: MYSQL_PASSWORD
+          value: myuser
+        readinessProbe:
+          exec:
+            command:
+            - /healthcheck.sh
+            - --readiness
+          initialDelaySeconds: 120
+          periodSeconds: 1
+        livenessProbe:
+          exec:
+            command:
+            - /healthcheck.sh
+            - --liveness
+          initialDelaySeconds: 120
+          periodSeconds: 1
+        resources:
+          requests:
+            cpu: 200m
+            memory: 200Mi
+        volumeMounts:
+        - name: mysql-datadir
+          mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+  - metadata:
+      namespace: ns-galera
+      name: mysql-datadir
+      #annotations:
+        #volume.beta.kubernetes.io/storage-class: glusterfs-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          #storage: 1Gi
+          storage: 200Mi

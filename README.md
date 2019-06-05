@@ -16,8 +16,10 @@ Based on https://github.com/severalnines/galera-docker-mariadb, modified and tes
 ##### Creating mariadb cluster with etcd cluster
 - First, generate yaml and sh files from Template/. namespace should exist beforehand.
 ```
-$ ./000-set-names ns-galera
+$ ./000-set-names ns-galera default
 ```
+
+The option 'default' means using default storage class for the PV's. If you want to use hostPath PV, use 'local' instead and then, 02-pv.yaml file will be copied from Templates/ folder.
 
 - Before creating mariadb cluster, we need to create an ETCD data store
   for storing galera cluster status
@@ -62,4 +64,9 @@ $ ./89-galera-sync-test.sh
 - Just run the scripts for complete deletion
 ```
 $ ./99-teardown.sh
+```
+
+Caution: If 'local' option was used, you mneed to delete each PVC's manually by
+```
+$ for i in `seq 0 2`; do kubectl delete pvc galera-pv$i-volume -n ns-galera; done
 ```

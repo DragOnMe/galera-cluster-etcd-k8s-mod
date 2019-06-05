@@ -18,15 +18,21 @@ function kubectlns() {
   fi
 }
 
-if [ $# -ne 1 ]; then
-    echo "Usage: $0 namespace-name"
+if [ $# -ne 2 ]; then
+    echo "Usage: $0 namespace-name {default | local}"
     exit -1
+else
+    if [[ $2 != "default" && $2 != "local" ]]; then
+        echo "Usage: $0 namespace-name {default | local}"
+        echo "Use 'default' or 'local' option for storageClass"
+        exit -1
+    fi
 fi
 
 # Check if namespace exists
 kubectlns $NAMESPACE_NAME
 
-read -n 1 -s -r -p "Press any key to deploy Mariadb cluster in cluster ($CLUSTER_NAME), namespace ($NAMESPACE_NAME) or ^C to abort: "
+read -n 1 -s -r -p "Press any key to generate scripts and recipe for installing  Mariadb cluster in cluster ($CLUSTER_NAME), namespace ($NAMESPACE_NAME) or ^C to abort: "
 
 echo "Setting cluster and namespace name in files ..."
 
@@ -40,3 +46,8 @@ for f in "${FILES[@]}"; do
     chmod +x $f
     echo "Done with $f..."
 done
+
+if [[ $2 == "local" ]]; then
+    sed -i -e '/accessModes: /i\' -e '      storageClassName: "manual"' 01-galera-mariadb-ss.yaml
+    cp Templates/02-pv.yaml .
+fi
