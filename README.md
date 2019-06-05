@@ -66,7 +66,7 @@ $ ./89-galera-sync-test.sh
 $ ./99-teardown.sh
 ```
 
-Caution: If 'local' option was used, you mneed to delete each PVC's manually by
+Caution: If 'local' option was used, you need to delete each PVC's manually by
 ```
 $ for i in `seq 0 2`; do kubectl delete pvc galera-pv$i-volume -n ns-galera; done
 ```
