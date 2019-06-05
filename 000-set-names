@@ -49,5 +49,6 @@ done
 
 if [[ $2 == "local" ]]; then
     sed -i -e '/accessModes: /i\' -e '      storageClassName: "manual"' 01-galera-mariadb-ss.yaml
-    cp Templates/02-pv.yaml .
+else
+    rm -f 02-pv.yaml
 fi
