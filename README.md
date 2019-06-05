@@ -25,7 +25,7 @@ And then, just run 000-gen-cmd-recipe!
 
 Or else, see below 1 to 3.
 
-###1.
+###### 1.
 
 - Before creating mariadb cluster, we need to create an ETCD data store
   for storing galera cluster status
@@ -33,7 +33,7 @@ Or else, see below 1 to 3.
 $ kubectl apply -f 00-etcd-cluster.yaml
 ```
 
-###2.
+###### 2.
 
 - And then, check if etcd cluster is ok
 ```
@@ -45,7 +45,7 @@ $ ./77-check-etcd-health.sh
 $ kubectl get pods -n ns-galera -w
 ```
 
-###3.
+###### 3.
 
 - Now create the galera cluster with statefulset and test by mysql client
 ```
