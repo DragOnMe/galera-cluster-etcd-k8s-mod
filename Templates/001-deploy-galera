@@ -4,7 +4,7 @@ echo "Deploying to __namespace__ in __cluster__"
 
 kubectl apply -f 00-etcd-cluster.yaml
 
-sleep 20
+sleep 10
 
 if grep -Fq "storageClassName: \"manual\"" 01-galera-mariadb-ss.yaml; then
     kubectl apply -f 02-pv.yaml
