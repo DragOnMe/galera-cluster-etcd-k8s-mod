@@ -8,6 +8,7 @@
 #   From: glusterfs
 #   To: nfs(default)
 # Added mysql-read service
+#       mysql-read-external service
 
 # Headless service for galera statefulset
 ---
@@ -41,6 +42,26 @@ spec:
   ports:
   - port: 3306
     name: mysql
+  selector:
+    app: galera-ss
+
+---
+
+# Client service via NodePort for connecting to any MySQL instance for reads from external area.
+
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: __namespace__
+  name: galera-read-external
+  labels:
+    app: galera-ss
+spec:
+  type: NodePort
+  ports:
+  - port: 3306
+    name: mysql
+    targetPort: 3306
   selector:
     app: galera-ss
 
