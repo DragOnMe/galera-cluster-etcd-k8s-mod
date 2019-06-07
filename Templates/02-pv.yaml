@@ -1,48 +1,48 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: galera-pv0-volume
+  name: __galera__-pv0-volume
   labels:
     type: local
 spec:
   storageClassName: manual
   capacity:
-    storage: 1Gi
+    storage: 200Mi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/mnt/data/galera-pv0-volume"
+    path: "/mnt/data/__galera__-pv0-volume"
 
 ---
 
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: galera-pv1-volume
+  name: __galera__-pv1-volume
   labels:
     type: local
 spec:
   storageClassName: manual
   capacity:
-    storage: 1Gi
+    storage: 200Mi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/mnt/data/galera-pv1-volume"
+    path: "/mnt/data/__galera__-pv1-volume"
 
 ---
 
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: galera-pv2-volume
+  name: __galera__-pv2-volume
   labels:
     type: local
 spec:
   storageClassName: manual
   capacity:
-    storage: 1Gi
+    storage: 200Mi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/mnt/data/galera-pv2-volume"
+    path: "/mnt/data/__galera__-pv2-volume"
