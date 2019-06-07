@@ -14,8 +14,11 @@ done
 kubectl delete -f 00-etcd-cluster.yaml
 
 # 4. check if pv exists
-sleep 20
+sleep 10
 kubectl get pv
+kubectl delete -f 02-pv.yaml
+echo "You need to delete each volume directory by hand if used local hostPath volume by command like below:"
+echo "for i in \`seq 1 5\` ; do ssh root@kube-\$i \"hostname && rm -rf /mnt/data/${GALERA_NAMESPACE:3}-pv?-volume\"; done"
 
 # 5. check if gluster volume exists
 #sleep 30
