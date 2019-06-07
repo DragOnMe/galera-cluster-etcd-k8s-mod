@@ -6,6 +6,7 @@ NAMESPACE_NAME="$1"
 TEMPLATE_PATH="./Templates"
 TEMPLATE_CLUSTER="__cluster__"
 TEMPLATE_NAMESPACE="__namespace__"
+TEMPLATE_VOLUME_PREFIX="__galera__"
 
 function kubectlns() {
   #ctx=`kubectl config current-context`
@@ -43,10 +44,13 @@ echo "Processing (${#FILES[*]}) files."
 for f in "${FILES[@]}"; do
     sed -e "s/$TEMPLATE_CLUSTER/$CLUSTER_NAME/g" "$TEMPLATE_PATH/$f" > $f
     sed -i "s/$TEMPLATE_NAMESPACE/$NAMESPACE_NAME/g" $f
+    # Remove first 3 characters from NAMESPACE_NAME
+    sed -i "s/$TEMPLATE_VOLUME_PREFIX/${NAMESPACE_NAME:3}/g" $f
     chmod +x $f
     echo "Done with $f..."
 done
 
+# insert new line for setting using hostpath volume
 if [[ $2 == "local" ]]; then
     sed -i -e '/accessModes: /i\' -e '      storageClassName: "manual"' 01-galera-mariadb-ss.yaml
 else
