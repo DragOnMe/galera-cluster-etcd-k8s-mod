@@ -69,7 +69,7 @@ $ ./89-galera-sync-test.sh
 
 ----------
 
-##### Tearing down all the cluster resourcess and namespace
+##### Tearing down all the cluster resourcess whthin the namespace
 
 - Just run the scripts for complete deletion
 ```
