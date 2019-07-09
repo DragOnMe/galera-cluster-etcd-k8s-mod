@@ -44,6 +44,7 @@ spec:
     name: mysql
   selector:
     app: galera-ss
+  sessionAffinity: ClientIP
 
 ---
 
@@ -64,6 +65,7 @@ spec:
     targetPort: 3306
   selector:
     app: galera-ss
+  sessionAffinity: ClientIP
 
 ---
 
