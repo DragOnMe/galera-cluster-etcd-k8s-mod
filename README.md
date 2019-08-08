@@ -211,16 +211,14 @@ service/etcd2 created
 ```
 
 ```
-[root@kube-1 galera-cluster-etcd-k8s-mod]# kubectl exec -it -n ns-galera etcd0 -- sh
-/ # etcdctl member list
+[root@kube-1 galera-cluster-etcd-k8s-mod]# kubectl exec -it -n ns-galera etcd0 -- sh -c 'etcdctl member list'
 3f64a6d9f1fb5b6a: name=etcd2 peerURLs=http://etcd2:2380 clientURLs=http://etcd2:2379 isLeader=false
 54d49836d722ca72: name=etcd1 peerURLs=http://etcd1:2380 clientURLs=http://etcd1:2379 isLeader=false
 cf1d15c5d194b5c9: name=etcd0 peerURLs=http://etcd0:2380 clientURLs=http://etcd0:2379 isLeader=true
-/ # 
-/ # etcdctl cluster-health
+
+[root@kube-1 galera-cluster-etcd-k8s-mod]# kubectl exec -it -n ns-galera etcd0 -- sh -c 'etcdctl cluster-health'
 member 3f64a6d9f1fb5b6a is healthy: got healthy result from http://etcd2:2379
 member 54d49836d722ca72 is healthy: got healthy result from http://etcd1:2379
 member cf1d15c5d194b5c9 is healthy: got healthy result from http://etcd0:2379
 cluster is healthy
-/ # 
 ```
