@@ -205,7 +205,7 @@ spec:
 ```
 
 ```
-[root@kube-1 galera-cluster-etcd-k8s-mod]# kubectl apply -f etcd2-svc-pod.yaml 
+[root@kube-1 galera-cluster-etcd-k8s-mod]# kubectl create -f etcd2-svc-pod.yaml 
 pod/etcd2 created
 service/etcd2 created
 ```
